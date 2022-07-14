@@ -1,4 +1,4 @@
-# H1 **Appointments Website**
+# **Appointments Website**
 
 This is a repository for a Drupal medical website.
 
