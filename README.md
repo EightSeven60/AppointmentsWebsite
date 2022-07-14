@@ -16,4 +16,4 @@ This is a repository for a Drupal medical website.
 
 - Allow doctors to confirm or cancel appointments. Have them provide a reason for cancelling.
 
-## [Drupal - Content management system used to create the site](drupal.org)
+## [Drupal - Content management system used to create the site](https://www.drupal.org/)
