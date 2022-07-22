@@ -16,10 +16,14 @@
     ],
     "require": {
         "composer/installers": "^1.9",
+        "drupal/calendar_systems": "^3.6",
         "drupal/core-composer-scaffold": "^9.4",
         "drupal/core-project-message": "^9.4",
         "drupal/core-recommended": "^9.4",
-        "drupal/core-vendor-hardening": "^9.4"
+        "drupal/core-vendor-hardening": "^9.4",
+        "drupal/smart_date": "3.5",
+        "drupal/smart_date_calendar_kit": "^2.0",
+        "drupal/smart_date_starter_kit": "^2.1"
     },
     "conflict": {
         "drupal/drupal": "*"

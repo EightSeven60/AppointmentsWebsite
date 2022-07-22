@@ -1,0 +1,13 @@
+name: Caledar Systems Better Exposed Filter
+type: module
+description: 'Caledar Systems better exposed filter module support.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - calendar_systems
+  - better_exposed_filters
+
+# Information added by Drupal.org packaging script on 2019-11-28
+version: '8.x-3.6'
+project: 'calendar_systems'
+datestamp: 1574932385
