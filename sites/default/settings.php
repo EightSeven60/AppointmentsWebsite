@@ -784,3 +784,4 @@ $settings['trusted_host_patterns'] = [
    '^www\.mydocsite\.net$',
    '^localhost$',
  ];
+ $config['system.logging']['error_level'] = 'verbose';

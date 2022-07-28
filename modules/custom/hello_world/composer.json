@@ -1,0 +1,24 @@
+{
+    "name": "drupal/hello_world",
+    "description": "My first custom module",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "Drupal\\HelloWorld\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Samartean Rares Petru",
+            "email": "84010916+EightSeven60@users.noreply.github.com"
+        }
+    ],
+    "require": {},
+    "repositories": {
+        "drupal": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/9"
+        }
+    }
+}

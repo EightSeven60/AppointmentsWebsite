@@ -1,0 +1,5 @@
+hello_world.admin.config:
+  title: "Hello World module"
+  base_route_name: hello_world.admin.config
+  names:
+    - hello_world.settings
