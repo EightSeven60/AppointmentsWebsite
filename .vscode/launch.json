@@ -1,0 +1,55 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to Chrome(Drupal)",
+      "port": 2976,
+      "request": "attach",
+      "type": "chrome",
+      "url": "localhost/AppointmentsWebsite/",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "Listen for XDebug(Drupal)",
+      "type": "php",
+      "request": "launch",
+      "port": 9000,
+      "pathMappings": {
+        "/path/to/drupal/webroot": "${workspaceFolder}"
+      },
+      "xdebugSettings": {
+        "show_hidden": 1
+      }
+    },
+    {
+      "name": "Launch index.html",
+      "type": "firefox",
+      "request": "launch",
+      "reAttach": true,
+      "file": "${workspaceFolder}/index.html"
+    },
+    {
+      "name": "Launch localhost",
+      "type": "firefox",
+      "request": "launch",
+      "reAttach": true,
+      "url": "http://localhost/index.html",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "name": "Attach",
+      "type": "firefox",
+      "request": "attach"
+    },
+    {
+      "name": "Launch WebExtension",
+      "type": "firefox",
+      "request": "launch",
+      "reAttach": true,
+      "addonPath": "${workspaceFolder}"
+    }
+  ]
+}

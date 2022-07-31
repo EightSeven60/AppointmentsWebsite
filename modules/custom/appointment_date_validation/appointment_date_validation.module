@@ -1,0 +1,105 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+
+function appointment_date_validation_upload_enabled_types_submit($form, FormStateInterface $form_state) {
+
+  //Get relevant values from submitted form
+  //To access a submitted value use $form_state->getValue('field_machine_name')[number_index_of_value_needed][]
+  //number_index_of_value_needed is there because a field can have multiple values
+  //The last indexation may be needed depending on how the field is stored, it may have multiple storage mediums
+  $form_doctor = $form_state->getValue('field_doctor')[0]['target_id'];
+
+  $form_when = $form_state->getValue('field_when')[0];
+  $form_when_duration = $form_when['duration']; //$form_when['time_wrapper']['duration'] was also available
+  $form_when_time_value = new DateTime($form_when['time_wrapper']['value']);
+  $form_when_time_value_end = new DateTime($form_when['time_wrapper']['end_value']);
+
+  //Debug code
+  //\Drupal::messenger()->addStatus("Form doctor: $form_doctor");
+
+  //$date = $form_when_time_value->format('Y.n.d G:i:s e');
+  //$date_end = $form_when_time_value_end->format('Y.n.d G:i:s e');
+  //\Drupal::messenger()->addStatus("Form when:");
+  //\Drupal::messenger()->addStatus("Start: $date");
+  //\Drupal::messenger()->addStatus("End: $date_end");
+  //\Drupal::messenger()->addStatus("Duration: $form_when_duration");
+
+  //Query database for entities associated with the same doctor
+  $connection = \Drupal::database();
+
+  $select = $connection->select('node__field_doctor')
+  ->condition('node__field_doctor.field_doctor_target_id', $form_doctor, '=')
+  ->condition('node__field_doctor.bundle', 'event', '=')
+  ->condition('node__field_doctor.deleted', 0, '=')
+  ->fields('node__field_doctor', ['entity_id']);
+  $entity_ids_doctor_query = $select->execute();
+
+  if (empty($entity_ids_doctor_query)) {
+    return;
+  }
+
+  //Query database for other entities with time intervals overlapping the submitted one
+  $form_time_interval = [$form_when_time_value->getTimestamp(), $form_when_time_value_end->getTimestamp() - 1];
+
+  $select = $connection->select('node__field_when')
+  ->condition('node__field_when.bundle', 'event', '=')
+  ->condition('node__field_when.deleted', 0, '=')
+  ->fields('node__field_when', ['entity_id']);
+
+  $or_condition_group = $select->orConditionGroup()
+  ->condition('node__field_when.field_when_value', $form_time_interval, 'BETWEEN')
+  ->condition('node__field_when.field_when_end_value', $form_time_interval, 'BETWEEN');
+  $select->condition($or_condition_group);
+
+  $entity_ids_when_query = $select->execute();
+
+  if (empty($entity_ids_when_query)){
+    return;
+  }
+
+  //Convert to arrays
+  $entity_ids_doctor_query = $entity_ids_doctor_query->fetchAll();
+  $entity_ids_when_query = $entity_ids_when_query->fetchAll();
+
+  $ids_same_doc = array();
+  //Debug code
+  //\Drupal::messenger()->addStatus('Events associated with the same doctor:');
+  foreach($entity_ids_doctor_query as $e) {
+    foreach($e as $key => $value) {
+      array_push($ids_same_doc, $value);
+      //Debug code
+      //\Drupal::messenger()->addStatus("D: $value");
+    }
+  }
+
+  $ids_same_time = array();
+  //Debug code
+  //\Drupal::messenger()->addStatus('Events with an overlapping time interval:');
+  foreach($entity_ids_when_query as $e) {
+    foreach($e as $key => $value) {
+      array_push($ids_same_time, $value);
+      //Debug code
+      //\Drupal::messenger()->addStatus("T: $value");
+    }
+  }
+
+  //Get event id's associated with the same doctor, with overlapping dates with the submitted event
+  $hits = array_intersect($ids_same_time, $ids_same_doc);
+  //Debug code
+  //\Drupal::messenger()->addStatus('Hits:');
+  //foreach($hits as $value) {
+  //  \Drupal::messenger()->addStatus("H: $value");
+  //}
+
+  if ( count($hits) > 0 ) {
+    $form_state->setError($form['field_when'], 'You have entered a time interval that overlaps with another appointment, please change it.');
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function appointment_date_validation_form_node_event_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  $form['#validate'][] = 'appointment_date_validation_upload_enabled_types_submit';
+}

@@ -1,0 +1,5 @@
+name: Appointment Date Validation
+type: module
+description: Forbids creation of two appointments with overlapping time intervals for the same doctor's cabinet
+core_version_requirement: ^9
+package: Custom
